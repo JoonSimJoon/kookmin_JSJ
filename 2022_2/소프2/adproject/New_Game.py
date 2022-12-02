@@ -37,10 +37,12 @@ class Ui_MainWindow(QMainWindow):
         gridLayout.setContentsMargins(0, 0, 0, 0)
 
         #self.StudentButtons 
+        self.Buttonlist =[]
         for i in range(8):
             new_button = QPushButton(self.gridLayoutWidget)
             new_button.setText(str(i+1))
-            gridLayout.addWidget(new_button, int(i/4), i%4, 1, 1)
+            self.Buttonlist.append(new_button)
+            gridLayout.addWidget(self.Buttonlist[i], int(i/4), i%4, 1, 1)
 
 
         Student_NULL = QPushButton(self.gridLayoutWidget)
@@ -102,12 +104,21 @@ class Ui_MainWindow(QMainWindow):
 
     def showTeacherSays(self):
         self.TeacherSays.clear()
-        name = self.DB.setteachersays()
+        name = self.DB.getTeachersays()
         self.TeacherSays.append(name)
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
     def startbuttonClicked(self):
+        self.DB.setteachersays()
+        self.DB.setStudent_button()
+        self.changeButtonInfo()
         self.showTeacherSays()
+
+    def changeButtonInfo(self):
+        Butonlist = self.DB.getStudent_button()
+        for i in range(8):
+            self.Buttonlist[i].setText(Butonlist[i])
+           
 
 if __name__ == "__main__":
     import sys

@@ -1,10 +1,16 @@
 import random
 
+# namedb명단에서 랜덤으로 8명 뽑음
+def pickStudent(list,num):
+    pickStudent = random.sample(list, num)
+    return pickStudent
+
 class DataBase:
     def __init__(self):
         self.namedb = []
         self.scoredb = 0
         self.teachersays = []
+        self.student_button=[]
         self.currentstage = -1
 
     def getstudentlist(self):
@@ -22,6 +28,21 @@ class DataBase:
                 self.namedb.remove(i)
 
     def setteachersays(self):
-        self.teachersays.append(random.choice(self.namedb))
-        self.currentstage += 1
-        return self.teachersays[self.currentstage]
+        self.teachersays = pickStudent(self.namedb,5)
+        self.currentstage = 0
+    
+    def getTeachersays(self):
+        name = self.teachersays[self.currentstage]
+        self.currentstage+=1
+        
+        return name
+    def setStudent_button(self):
+        self.student_button = pickStudent(self.namedb,8)
+    
+    def getStudent_button(self):
+        return self.student_button
+
+
+
+
+
