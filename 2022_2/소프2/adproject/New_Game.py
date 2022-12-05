@@ -3,7 +3,9 @@ from PyQt5.QtWidgets import *
 from DataBase import DataBase
 from functools import partial
 import time
+import sys
 import asyncio
+
 class Ui_MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -115,17 +117,9 @@ class Ui_MainWindow(QMainWindow):
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
     def startbuttonClicked(self):
-        self.DB.setScore()
-        self.DB.setteachersays()
-        self.DB.setStudent_button()
-        self.setScoretext()
+        asyncio.run(self.setnewgame())
         asyncio.run(self.rotatetime())
-        self.changeButtonInfo()
-        self.showTeacherSays()
-        #self.rotatetime()
         
-
-
     def setScoretext(self):
         self.Score.clear()
         name = self.DB.getScore()
@@ -153,16 +147,23 @@ class Ui_MainWindow(QMainWindow):
         self.TeacherSays.append(name)
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
+    async def setnewgame(self):
+        self.DB.setScore()
+        self.DB.setteachersays()
+        self.DB.setStudent_button()
+        self.setScoretext()
+        self.changeButtonInfo()
+        self.showTeacherSays()
+
     async def rotatetime(self):
         for i in range(10):
             self.Left_Time.setProperty("value",int(100-i*10))
-            await asyncio.sleep(0.4)
+            time.sleep(0.4)
 
 
 
 
 if __name__ == "__main__":
-    import sys
     app = QApplication(sys.argv)
     ui = Ui_MainWindow()
     ui.show()
