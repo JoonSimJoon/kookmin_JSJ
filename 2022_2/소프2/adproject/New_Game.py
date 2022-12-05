@@ -83,7 +83,7 @@ class Ui_MainWindow(QMainWindow):
 
         self.Left_Time = QProgressBar(self.centralwidget)
         self.Left_Time.setGeometry(QRect(300, 40, 111, 23))
-        self.Left_Time.setProperty("value", 100)  # 배터리=남은시간
+        self.Left_Time.setProperty("value", 0)  # 배터리=남은시간
 
         Score_label = QLabel(self.centralwidget)
         Score_label.setText("Score:")
@@ -155,6 +155,7 @@ class Ui_MainWindow(QMainWindow):
         else:
             self.set_thread()
 
+
     def surrender(self):
         self.kill_thread()
         self.TeacherSays.clear()
@@ -170,10 +171,10 @@ class Ui_MainWindow(QMainWindow):
         self.changeButtonInfo()
         self.showTeacherSays()
         
-    def rotatetime(self, val):
+    
+    def rotateTime(self, val):
         self.Left_Time.setProperty("value",100-val)
-        if(100-val==0):
-            self.studentButtonclicked(-1)
+
 
     def set_thread(self):
         self.thread = QThread()
@@ -183,7 +184,7 @@ class Ui_MainWindow(QMainWindow):
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.progress.connect(self.rotatetime)
+        self.worker.progress.connect(self.rotateTime)
         self.thread.start()
 
     def kill_thread(self):
