@@ -47,10 +47,11 @@ class Ui_MainWindow(QMainWindow):
             self.Buttonlist.append(new_button)
             gridLayout.addWidget(self.Buttonlist[i], int(i/4), i%4, 1, 1)
 
-
         Student_NULL = QPushButton(self.gridLayoutWidget)
         Student_NULL.setText("X")         #호명한 학생이 없는 경우
-        gridLayout.addWidget(Student_NULL, 2, 3, 1, 1)
+        self.Buttonlist.append(Student_NULL)
+        gridLayout.addWidget(self.Buttonlist[8], 2, 3, 1, 1)
+        self.Buttonlist[8].clicked.connect(partial(self.studentButtonclicked,8))
 
         StartButton = QPushButton(self.gridLayoutWidget)
         gridLayout.addWidget(StartButton, 3, 0, 1, 1)
@@ -60,6 +61,7 @@ class Ui_MainWindow(QMainWindow):
         SurrenderButton = QPushButton(self.gridLayoutWidget)
         SurrenderButton.setText("Surrender")
         gridLayout.addWidget(SurrenderButton, 3, 1, 1, 1)
+        SurrenderButton.clicked.connect(self.surrender)
 
         self.TeacherSays = QTextEdit(self.centralwidget)
         self.TeacherSays.setReadOnly(True) #글자 입력 못하게 바꿈, 출력만 하게
@@ -112,8 +114,10 @@ class Ui_MainWindow(QMainWindow):
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
     def startbuttonClicked(self):
+        self.DB.setScore()
         self.DB.setteachersays()
         self.DB.setStudent_button()
+        self.setScoretext()
         self.changeButtonInfo()
         self.showTeacherSays()
 
@@ -137,7 +141,12 @@ class Ui_MainWindow(QMainWindow):
             name = "\n" +"Your score is " + str(self.DB.getScore())
             self.TeacherSays.append(name)
             self.TeacherSays.setAlignment(Qt.AlignCenter)
-           
+
+    def surrender(self):
+        self.TeacherSays.clear()
+        name = "\n" +"Your score is " + str(self.DB.getScore())
+        self.TeacherSays.append(name)
+        self.TeacherSays.setAlignment(Qt.AlignCenter)
 
 if __name__ == "__main__":
     import sys

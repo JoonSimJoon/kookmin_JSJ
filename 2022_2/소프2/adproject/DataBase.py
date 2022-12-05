@@ -11,9 +11,12 @@ class DataBase:
         self.scoredb = 0
         self.teachersays = []
         self.student_button=[]
-        self.currentstage = -1
+        self.currentstage = 0
         self.pickStudent=[]
 
+    def setScore(self):
+        self.scoredb =0 
+        self.currentstage = 0
     def getstudentlist(self):
         studentlist = ""
         for i in self.namedb:
@@ -44,8 +47,12 @@ class DataBase:
         return self.student_button
 
     def compareData(self, num):
-        if(self.teachersays[self.currentstage] == self.student_button[num]):
-            self.scoredb +=1
+        if(num==8):
+            if(self.teachersays[self.currentstage] not in self.student_button):
+                self.scoredb +=1
+        else:
+            if(self.teachersays[self.currentstage] == self.student_button[num]):
+                self.scoredb +=1
         if(self.currentstage != 4):
             self.currentstage+=1
             return 1
