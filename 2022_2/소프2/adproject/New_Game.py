@@ -4,7 +4,18 @@ from DataBase import DataBase
 from functools import partial
 import time
 import sys
-import asyncio
+
+class Worker(QObject):
+    finished = pyqtSignal()
+    progress = pyqtSignal(int)
+
+    def run(self):
+        """Long-running task."""
+        for i in range(11):
+            time.sleep(0.2)
+            self.progress.emit(i*10)
+        self.finished.emit()
+
 
 class Ui_MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -117,8 +128,8 @@ class Ui_MainWindow(QMainWindow):
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
     def startbuttonClicked(self):
-        asyncio.run(self.setnewgame())
-        asyncio.run(self.rotatetime())
+        self.setnewgame()
+        self.set_thread()
         
     def setScoretext(self):
         self.Score.clear()
@@ -132,6 +143,7 @@ class Ui_MainWindow(QMainWindow):
             self.Buttonlist[i].setText(Buttonlist[i])
     
     def studentButtonclicked(self,num):
+        self.kill_thread()
         gamestatus = self.DB.compareData(num)
         self.showTeacherSays()
         self.setScoretext()
@@ -140,25 +152,48 @@ class Ui_MainWindow(QMainWindow):
             name = "\n" +"Your score is " + str(self.DB.getScore())
             self.TeacherSays.append(name)
             self.TeacherSays.setAlignment(Qt.AlignCenter)
+        else:
+            self.set_thread()
 
     def surrender(self):
+        self.kill_thread()
         self.TeacherSays.clear()
         name = "\n" +"Your score is " + str(self.DB.getScore())
         self.TeacherSays.append(name)
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
-    async def setnewgame(self):
+    def setnewgame(self):
         self.DB.setScore()
         self.DB.setteachersays()
         self.DB.setStudent_button()
         self.setScoretext()
         self.changeButtonInfo()
         self.showTeacherSays()
+        
+    def rotatetime(self, val):
+        self.Left_Time.setProperty("value",100-val)
+        if(100-val==0):
+            self.studentButtonclicked(-1)
 
-    async def rotatetime(self):
-        for i in range(10):
-            self.Left_Time.setProperty("value",int(100-i*10))
-            time.sleep(0.4)
+    def set_thread(self):
+        self.thread = QThread()
+        self.worker = Worker()
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.progress.connect(self.rotatetime)
+        self.thread.start()
+
+    def kill_thread(self):
+        self.thread.requestInterruption()
+        if self.thread.isRunning():
+            self.thread.quit()
+            self.thread.wait()
+        else:
+            print('worker has already exited.')
+
 
 
 
