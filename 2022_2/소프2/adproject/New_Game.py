@@ -122,7 +122,6 @@ class Ui_MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     import sys
-
     app = QApplication(sys.argv)
     ui = Ui_MainWindow()
     ui.show()

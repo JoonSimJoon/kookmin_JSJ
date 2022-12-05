@@ -1,8 +1,13 @@
 import random
 
 # namedb명단에서 랜덤으로 8명 뽑음
+<<<<<<< HEAD
 def pickStudent(list,num):
     pickStudent = random.sample(list, num)
+=======
+def pickStudent(num):
+    pickStudent = random.sample(num, 8)
+>>>>>>> 4cbb3948fe815ab9ee9f504631ba5cab97c66974
     return pickStudent
 
 class DataBase:
@@ -12,6 +17,7 @@ class DataBase:
         self.teachersays = []
         self.student_button=[]
         self.currentstage = -1
+        self.pickStudent=[]
 
     def getstudentlist(self):
         studentlist = ""
@@ -27,7 +33,9 @@ class DataBase:
             if i == studentname:
                 self.namedb.remove(i)
 
+
     def setteachersays(self):
+<<<<<<< HEAD
         self.teachersays = pickStudent(self.namedb,5)
         self.currentstage = 0
     
@@ -46,3 +54,17 @@ class DataBase:
 
 
 
+=======
+        picked = pickStudent(self.namedb)
+        a = random.choice(picked)
+        while a not in self.teachersays:
+            self.teachersays.append(a)
+        self.currentstage += 1
+        return self.teachersays[self.currentstage]
+        # if a not in self.teachersays:
+        #     self.teachersays.append(a)
+        # else:
+        #
+        # self.currentstage += 1
+        # return self.teachersays[self.currentstage]
+>>>>>>> 4cbb3948fe815ab9ee9f504631ba5cab97c66974
