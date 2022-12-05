@@ -117,15 +117,26 @@ class Ui_MainWindow(QMainWindow):
         self.changeButtonInfo()
         self.showTeacherSays()
 
+    def setScoretext(self):
+        self.Score.clear()
+        name = self.DB.getScore()
+        self.Score.setText(str(name))
+        self.Score.setAlignment(Qt.AlignCenter)
+
     def changeButtonInfo(self):
         Buttonlist = self.DB.getStudent_button()
         for i in range(8):
             self.Buttonlist[i].setText(Buttonlist[i])
     
     def studentButtonclicked(self,num):
-        saying = self.TeacherSays.toPlainText()
-        
-        print(saying,num)
+        gamestatus = self.DB.compareData(num)
+        self.showTeacherSays()
+        self.setScoretext()
+        if(gamestatus == 0):
+            self.TeacherSays.clear()
+            name = self.DB.endGame() + "\n" +"Your score is " + str(self.DB.getScore())
+            self.TeacherSays.append(name)
+            self.TeacherSays.setAlignment(Qt.AlignCenter)
            
 
 if __name__ == "__main__":

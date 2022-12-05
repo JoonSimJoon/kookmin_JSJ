@@ -1,6 +1,6 @@
 import random
 
-# namedb명단에서 랜덤으로 8명 뽑음
+# namedb명단에서 랜덤으로 num명 뽑음
 def pickStudent(list,num):
     pickStudent = random.sample(list, num)
     return pickStudent
@@ -35,7 +35,6 @@ class DataBase:
     
     def getTeachersays(self):
         name = self.teachersays[self.currentstage]
-        self.currentstage+=1
         
         return name
     def setStudent_button(self):
@@ -44,6 +43,19 @@ class DataBase:
     def getStudent_button(self):
         return self.student_button
 
+    def compareData(self, num):
+        if(self.teachersays[self.currentstage] == self.student_button[num]):
+            self.scoredb +=1
+        if(self.currentstage != 4):
+            self.currentstage+=1
+            return 1
+        else:
+            return 0
 
+    def getScore(self):
+        return self.scoredb
+
+    def endGame(self):
+        return "GAME END"
 
 
