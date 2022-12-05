@@ -1,6 +1,8 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from DataBase import DataBase
+from functools import partial
+
 class Ui_MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -41,6 +43,7 @@ class Ui_MainWindow(QMainWindow):
         for i in range(8):
             new_button = QPushButton(self.gridLayoutWidget)
             new_button.setText(str(i+1))
+            new_button.clicked.connect(partial(self.studentButtonclicked,i))
             self.Buttonlist.append(new_button)
             gridLayout.addWidget(self.Buttonlist[i], int(i/4), i%4, 1, 1)
 
@@ -115,9 +118,14 @@ class Ui_MainWindow(QMainWindow):
         self.showTeacherSays()
 
     def changeButtonInfo(self):
-        Butonlist = self.DB.getStudent_button()
+        Buttonlist = self.DB.getStudent_button()
         for i in range(8):
-            self.Buttonlist[i].setText(Butonlist[i])
+            self.Buttonlist[i].setText(Buttonlist[i])
+    
+    def studentButtonclicked(self,num):
+        saying = self.TeacherSays.toPlainText()
+        
+        print(saying,num)
            
 
 if __name__ == "__main__":
