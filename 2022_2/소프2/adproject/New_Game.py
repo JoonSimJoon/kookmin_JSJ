@@ -134,7 +134,7 @@ class Ui_MainWindow(QMainWindow):
         self.setScoretext()
         if(gamestatus == 0):
             self.TeacherSays.clear()
-            name = self.DB.endGame() + "\n" +"Your score is " + str(self.DB.getScore())
+            name = "\n" +"Your score is " + str(self.DB.getScore())
             self.TeacherSays.append(name)
             self.TeacherSays.setAlignment(Qt.AlignCenter)
            
