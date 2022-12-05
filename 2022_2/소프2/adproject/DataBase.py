@@ -12,7 +12,6 @@ class DataBase:
         self.teachersays = []
         self.student_button=[]
         self.currentstage = 0
-        self.pickStudent=[]
 
     def setScore(self):
         self.scoredb =0 
