@@ -2,8 +2,22 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from DataBase import DataBase
 from functools import partial
+import signal
 import time
-import asyncio
+ 
+class TimeOutException(Exception):
+    pass
+
+def alarm_handler(signum, frame):
+    print("Time is up!")
+    raise TimeOutException()
+ 
+def loop_for_n_seconds(n):
+    for sec in range(n):
+        print("{} second!".format(sec))
+        time.sleep(1)
+
+
 class Ui_MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -89,7 +103,7 @@ class Ui_MainWindow(QMainWindow):
         self.statusbar = QStatusBar()
         self.setStatusBar(self.statusbar)
 
-        #score 비교시 Score_label ==5?이런식? 이거 어케함
+        
         
     def showStudentList(self):
         self.StudentList.clear()
@@ -119,12 +133,10 @@ class Ui_MainWindow(QMainWindow):
         self.DB.setteachersays()
         self.DB.setStudent_button()
         self.setScoretext()
-        asyncio.run(self.rotatetime())
         self.changeButtonInfo()
         self.showTeacherSays()
-        #self.rotatetime()
-        
-
+        self.rotatetime()
+        #asyncio.run(self.rotatetime())
 
     def setScoretext(self):
         self.Score.clear()
@@ -153,10 +165,11 @@ class Ui_MainWindow(QMainWindow):
         self.TeacherSays.append(name)
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
-    async def rotatetime(self):
+    def rotatetime(self):
+        timer = QTimer(self)
         for i in range(10):
-            self.Left_Time.setProperty("value",int(100-i*10))
-            await asyncio.sleep(0.4)
+            timer.start(400)
+            self.Left_Time.setProperty("value", 100-i*10)
 
 
 
