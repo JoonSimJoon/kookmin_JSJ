@@ -4,6 +4,7 @@ from DataBase import DataBase
 from functools import partial
 import signal
 import time
+<<<<<<< HEAD
  
 class TimeOutException(Exception):
     pass
@@ -16,6 +17,20 @@ def loop_for_n_seconds(n):
     for sec in range(n):
         print("{} second!".format(sec))
         time.sleep(1)
+=======
+import sys
+
+class Worker(QObject):
+    finished = pyqtSignal()
+    progress = pyqtSignal(int)
+
+    def run(self):
+        """Long-running task."""
+        for i in range(11):
+            time.sleep(0.2)
+            self.progress.emit(i*10)
+        self.finished.emit()
+>>>>>>> 6eb314ce770bb0904f0f4d68bfbdbbbca2974690
 
 
 class Ui_MainWindow(QMainWindow):
@@ -84,7 +99,7 @@ class Ui_MainWindow(QMainWindow):
 
         self.Left_Time = QProgressBar(self.centralwidget)
         self.Left_Time.setGeometry(QRect(300, 40, 111, 23))
-        self.Left_Time.setProperty("value", 100)  # 배터리=남은시간
+        self.Left_Time.setProperty("value", 0)  # 배터리=남은시간
 
         Score_label = QLabel(self.centralwidget)
         Score_label.setText("Score:")
@@ -129,6 +144,7 @@ class Ui_MainWindow(QMainWindow):
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
     def startbuttonClicked(self):
+<<<<<<< HEAD
         self.DB.setScore()
         self.DB.setteachersays()
         self.DB.setStudent_button()
@@ -138,6 +154,11 @@ class Ui_MainWindow(QMainWindow):
         self.rotatetime()
         #asyncio.run(self.rotatetime())
 
+=======
+        self.setnewgame()
+        self.set_thread()
+        
+>>>>>>> 6eb314ce770bb0904f0f4d68bfbdbbbca2974690
     def setScoretext(self):
         self.Score.clear()
         name = self.DB.getScore()
@@ -150,6 +171,7 @@ class Ui_MainWindow(QMainWindow):
             self.Buttonlist[i].setText(Buttonlist[i])
     
     def studentButtonclicked(self,num):
+        self.kill_thread()
         gamestatus = self.DB.compareData(num)
         self.showTeacherSays()
         self.setScoretext()
@@ -158,24 +180,62 @@ class Ui_MainWindow(QMainWindow):
             name = "\n" +"Your score is " + str(self.DB.getScore())
             self.TeacherSays.append(name)
             self.TeacherSays.setAlignment(Qt.AlignCenter)
+        else:
+            self.set_thread()
+
 
     def surrender(self):
+        self.kill_thread()
         self.TeacherSays.clear()
         name = "\n" +"Your score is " + str(self.DB.getScore())
         self.TeacherSays.append(name)
         self.TeacherSays.setAlignment(Qt.AlignCenter)
 
+<<<<<<< HEAD
     def rotatetime(self):
         timer = QTimer(self)
         for i in range(10):
             timer.start(400)
             self.Left_Time.setProperty("value", 100-i*10)
+=======
+    def setnewgame(self):
+        self.DB.setScore()
+        self.DB.setteachersays()
+        self.DB.setStudent_button()
+        self.setScoretext()
+        self.changeButtonInfo()
+        self.showTeacherSays()
+        
+    
+    def rotateTime(self, val):
+        self.Left_Time.setProperty("value",100-val)
+
+
+    def set_thread(self):
+        self.thread = QThread()
+        self.worker = Worker()
+        self.worker.moveToThread(self.thread)
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.progress.connect(self.rotateTime)
+        self.thread.start()
+
+    def kill_thread(self):
+        self.thread.requestInterruption()
+        if self.thread.isRunning():
+            self.thread.quit()
+            self.thread.wait()
+        else:
+            print('worker has already exited.')
+
+>>>>>>> 6eb314ce770bb0904f0f4d68bfbdbbbca2974690
 
 
 
 
 if __name__ == "__main__":
-    import sys
     app = QApplication(sys.argv)
     ui = Ui_MainWindow()
     ui.show()

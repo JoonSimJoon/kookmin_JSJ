@@ -12,7 +12,6 @@ class DataBase:
         self.teachersays = []
         self.student_button=[]
         self.currentstage = 0
-        self.pickStudent=[]
 
     def setScore(self):
         self.scoredb =0 
@@ -50,7 +49,7 @@ class DataBase:
         if(num==8):
             if(self.teachersays[self.currentstage] not in self.student_button):
                 self.scoredb +=1
-        else:
+        elif num>=0:
             if(self.teachersays[self.currentstage] == self.student_button[num]):
                 self.scoredb +=1
         if(self.currentstage != 4):
@@ -61,6 +60,9 @@ class DataBase:
 
     def getScore(self):
         return self.scoredb
+
+    def getcurrentstage(self):
+        return self.currentstage
 
     def endGame(self):
         return "GAME END"
