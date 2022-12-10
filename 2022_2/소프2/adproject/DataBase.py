@@ -1,4 +1,5 @@
 import random
+import time
 
 # namedb명단에서 랜덤으로 num명 뽑음
 def pickStudent(list,num):
@@ -16,6 +17,7 @@ class DataBase:
     def setScore(self):
         self.scoredb =0 
         self.currentstage = 0
+
     def getstudentlist(self):
         studentlist = ""
         for i in self.namedb:
@@ -63,8 +65,3 @@ class DataBase:
 
     def getcurrentstage(self):
         return self.currentstage
-
-    def endGame(self):
-        return "GAME END"
-
-
